@@ -148,6 +148,10 @@ code {
   padding: 32px 0 10px;
 }
 
+.hero-heading {
+  grid-column: 1 / -1;
+}
+
 .eyebrow,
 .kicker {
   color: var(--accent);
@@ -160,23 +164,27 @@ code {
 .content-block h2 {
   margin: 12px 0 0;
   font-family: "Cormorant Garamond", serif;
-  line-height: 0.96;
+  line-height: 0.98;
   letter-spacing: -0.03em;
+  text-wrap: balance;
 }
 
 .hero h1 {
-  font-size: clamp(3.6rem, 7vw, 6.4rem);
+  font-size: clamp(3rem, 5vw, 4.8rem);
   font-weight: 600;
+  max-width: none;
+  white-space: nowrap;
 }
 
 .content-block h2 {
-  font-size: clamp(2.5rem, 4vw, 4rem);
+  max-width: min(1200px);
+  font-size: clamp(2.2rem, 3.5vw, 3.2rem);
   font-weight: 600;
-  margin: 6px 0 10px;
+  margin: 8px 0 12px;
 }
 
 .hero-subtitle {
-  margin: 22px 0 0;
+  margin: 4px 0 0;
   color: rgba(244, 240, 232, 0.78);
   font-family: "Cormorant Garamond", serif;
   font-style: italic;
@@ -199,6 +207,10 @@ code {
   margin: 0;
   max-width: 760px;
   font-size: 1.08rem;
+}
+
+.hero-copy {
+  align-self: start;
 }
 
 .lang-switch {
@@ -312,6 +324,12 @@ code {
   font-size: 1.05rem;
 }
 
+.content-block .kicker {
+  display: inline-block;
+  max-width: 860px;
+  margin-bottom: 2px;
+}
+
 .insert-note {
   display: inline-flex;
   width: fit-content;
@@ -394,10 +412,23 @@ code {
   align-items: stretch;
 }
 
+.inline-visual-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  width: 100%;
+  max-width: 860px;
+  margin-top: 10px;
+}
+
 .video-card {
   aspect-ratio: 1.86 / 1;
   min-height: 0;
   padding: 0;
+}
+
+.video-card-inline {
+  aspect-ratio: 1.74 / 1;
 }
 
 .video-card::after {
@@ -435,6 +466,27 @@ code {
 .video-card-note {
   color: rgba(244, 240, 232, 0.82);
   font-size: 0.9rem;
+}
+
+.video-card-inline .video-card-copy {
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  gap: 2px;
+}
+
+.video-card-inline .video-card-title {
+  font-size: 1.2rem;
+}
+
+.video-card-inline .video-card-meta {
+  font-size: 0.64rem;
+  letter-spacing: 0.1em;
+}
+
+.video-card-inline .video-card-note {
+  font-size: 0.8rem;
+  line-height: 1.35;
 }
 
 .back-to-top {
@@ -531,6 +583,10 @@ code {
   .video-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
+  .inline-visual-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 720px) {
@@ -549,6 +605,10 @@ code {
 
   .hero {
     gap: 22px;
+  }
+
+  .hero h1 {
+    white-space: normal;
   }
 
   .video-grid {

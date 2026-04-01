@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Human Data Tech BLog</title>
+  <title>From Human Skill to Robotic Mastery</title>
   <meta
     name="description"
     content="A cinematic local blog page with bilingual article content and clickable demo videos."
@@ -22,7 +22,6 @@
       <a class="brand" href="#top">Research / Preview</a>
       <nav class="header-links">
         <a href="#intro">Intro</a>
-        <a href="#demos">Demos</a>
         <a href="#psi-policy">PSI-Policy</a>
         <a href="#psi-world">PSI-World</a>
       </nav>
@@ -38,17 +37,20 @@
 
       <article class="article">
         <section class="hero">
-          <div class="hero-copy">
+          <div class="hero-heading">
             <div class="eyebrow">March 31, 2026</div>
-            <h1>Human Data Tech BLog</h1>
+            <h1>From Human Skill to Robotic Mastery</h1>
+          </div>
+
+          <div class="hero-copy">
             <p class="hero-subtitle">The hand is the instrument of instruments. — Leonardo da Vinci</p>
 
             <div class="lang-switch" aria-label="Language toggle">
               <button class="lang-pill is-active js-lang-toggle" type="button" data-target-lang="zh">
-                中文原文
+                中文
               </button>
               <button class="lang-pill js-lang-toggle" type="button" data-target-lang="en">
-                English Translation
+                English
               </button>
             </div>
 
@@ -64,7 +66,7 @@
             </div>
 
             <div class="hero-actions">
-              <a class="button button-primary" href="#demos">Video Gallery / 视频展示</a>
+              <a class="button button-primary" href="#psi-policy">Video Gallery / 视频展示</a>
               <button
                 class="button button-secondary js-open-video"
                 type="button"
@@ -99,9 +101,6 @@
                 Play
               </button>
             </div>
-            <p class="hero-caption">
-              A wide teaser at the top, then a bilingual article body, then a gallery of local demos.
-            </p>
           </div>
         </section>
 
@@ -124,9 +123,6 @@
               >
                 <source src="./diagram-studio/output/psi_flywheel.mp4" type="video/mp4">
               </video>
-              <figcaption class="framework-caption">
-                Figure A：人类数据和真机数据进入 PSI-Policy 预训练，策略输出在 PSI-World 中完成评估、强化学习与机器人化转换，再将筛选后的数据回流训练。
-              </figcaption>
             </figure>
             <!-- <p>
               用人类数据来做真机数据的补充是近年来的研究重点，怎么将其用于预训练一直是一个主要的研究方向。我们的X框架是第一个使用广泛地10W小时量级人类数据预训练的模型。我们的框架包含了2个模型：PSI-Policy和PSI-World，以及将他们接在一起进行策略的评估，提升与飞轮。接下来我详细介绍一下X框架的设计和一些思考。
@@ -151,119 +147,10 @@
               >
                 <source src="./diagram-studio/output/psi_flywheel.mp4" type="video/mp4">
               </video>
-              <figcaption class="framework-caption">
-                Data flow in the X framework: human data and robot data pretrain PSI-Policy; the policy outputs are then evaluated, refined, and robotized inside PSI-World before selected trajectories are fed back into training as a flywheel.
-              </figcaption>
             </figure>
             <p>
               Using human data to supplement real-robot data has been a major research focus in recent years, and how to use it for pretraining has been one of the main research directions. Our X framework is the first model pretrained with broadly collected human data at the scale of 100,000 hours. Our framework contains two models, PSI-Policy and PSI-World, together with an evaluation, improvement, and flywheel loop that connects them. Next, I will explain the design of the X framework and some of our thinking in detail.
             </p>
-          </div>
-        </section>
-
-        <section class="content-block" id="demos" data-toc="Demos">
-          <div class="video-grid video-grid-wide">
-            <button
-              class="video-card video-card-wide js-open-video"
-              type="button"
-              data-video-src="./assets/videos/demo-01.mp4"
-              data-video-title="Demo 01 / Long-form interaction"
-              style="--video-pos: 50% 18%;"
-            >
-              <video muted loop playsinline preload="metadata">
-                <source src="./assets/videos/demo-01.mp4" type="video/mp4">
-              </video>
-              <span class="video-card-copy">
-                <span class="video-card-title">Demo 01</span>
-                <span class="video-card-meta">Portrait clip</span>
-                <span class="video-card-note">Long-horizon manipulation</span>
-              </span>
-            </button>
-
-            <button
-              class="video-card video-card-wide js-open-video"
-              type="button"
-              data-video-src="./assets/videos/excerpts/demo-02-excerpt.mp4"
-              data-video-title="Demo 02 / Excerpt preview"
-              style="--video-pos: 50% 22%;"
-            >
-              <video muted loop playsinline preload="metadata">
-                <source src="./assets/videos/excerpts/demo-02-excerpt.mp4" type="video/mp4">
-              </video>
-              <span class="video-card-copy">
-                <span class="video-card-title">Demo 02</span>
-                <span class="video-card-meta">Excerpt preview</span>
-                <span class="video-card-note">Browser-safe H.264 crop</span>
-              </span>
-            </button>
-
-            <button
-              class="video-card video-card-wide js-open-video"
-              type="button"
-              data-video-src="./assets/videos/demo-03.mp4"
-              data-video-title="Demo 03 / Compact showcase"
-              style="--video-pos: 50% 18%;"
-            >
-              <video muted loop playsinline preload="metadata">
-                <source src="./assets/videos/demo-03.mp4" type="video/mp4">
-              </video>
-              <span class="video-card-copy">
-                <span class="video-card-title">Demo 03</span>
-                <span class="video-card-meta">Portrait clip</span>
-                <span class="video-card-note">Compact visual summary</span>
-              </span>
-            </button>
-
-            <button
-              class="video-card video-card-wide js-open-video"
-              type="button"
-              data-video-src="./assets/videos/demo-04.mp4"
-              data-video-title="Demo 04 / Wide teaser"
-              style="--video-pos: 50% 50%;"
-            >
-              <video muted loop playsinline preload="metadata">
-                <source src="./assets/videos/demo-04.mp4" type="video/mp4">
-              </video>
-              <span class="video-card-copy">
-                <span class="video-card-title">Demo 04</span>
-                <span class="video-card-meta">Landscape clip</span>
-                <span class="video-card-note">Short high-impact opener</span>
-              </span>
-            </button>
-
-            <button
-              class="video-card video-card-wide js-open-video"
-              type="button"
-              data-video-src="./assets/videos/excerpts/demo-05-excerpt.mp4"
-              data-video-title="Demo 05 / Excerpt preview"
-              style="--video-pos: 50% 20%;"
-            >
-              <video muted loop playsinline preload="metadata">
-                <source src="./assets/videos/excerpts/demo-05-excerpt.mp4" type="video/mp4">
-              </video>
-              <span class="video-card-copy">
-                <span class="video-card-title">Demo 05</span>
-                <span class="video-card-meta">Excerpt preview</span>
-                <span class="video-card-note">Browser-safe H.264 crop</span>
-              </span>
-            </button>
-
-            <button
-              class="video-card video-card-wide js-open-video"
-              type="button"
-              data-video-src="./assets/videos/excerpts/demo-06-excerpt.mp4"
-              data-video-title="Demo 06 / Excerpt preview"
-              style="--video-pos: 50% 50%;"
-            >
-              <video muted loop playsinline preload="metadata">
-                <source src="./assets/videos/excerpts/demo-06-excerpt.mp4" type="video/mp4">
-              </video>
-              <span class="video-card-copy">
-                <span class="video-card-title">Demo 06</span>
-                <span class="video-card-meta">Landscape excerpt</span>
-                <span class="video-card-note">Fast browser-stable preview</span>
-              </span>
-            </button>
           </div>
         </section>
 
@@ -289,7 +176,109 @@
             <p>
               同时，整个数据管线也非常重要，包括对数据的清洗，标注，质检，审核等功能。我们所有的数据质检和标注都使用AutoLabeling的方式完成，只在最后需要人工审核。同时在数据的质检中引入PSI-World，运用世界模型的可视化能力为数据质量打分。在整套Pipeline的设计一开始，我们就希望人类数据不只是从image中提供一些高层次的语义信息，而是包括所有的操作细节，所以我们会让人类数据的3D轨迹尽可能准确。从纯Ego视频数据中恢复人手操作的误差基本是厘米级的，但是借助我们灵初的外骨骼手套，可以将其降低到亚毫米级的精度。举个例子，我们会在数据收集前使用数采手套进行机器人的遥操作来调整参数，确保其映射的准确。在数据管线中，也还会再对漂移的或者不准的pose进行修正，确保最后使用到的数据都是非常精确，可在机器人上replay出来的轨迹。对于数据的详细分析可以看第三章。最后，WAM的一个痛点是推理慢，我们也花费了非常多的工程努力，包括DiT Caching，Torch Compile，Quantization等，将其从单次推理2.2s降低到了100ms以下，保证了操作时灵巧与顺滑。
             </p>
-            <p class="insert-note">【插入训练数据retrieval图，视频预测效果对比图等】</p>
+            <div class="inline-visual-grid">
+              <button
+                class="video-card video-card-inline js-open-video"
+                type="button"
+                data-video-src="./assets/videos/demo-01.mp4"
+                data-video-title="Demo 01 / Long-form interaction"
+                style="--video-pos: 50% 18%;"
+              >
+                <video muted loop playsinline preload="metadata">
+                  <source src="./assets/videos/demo-01.mp4" type="video/mp4">
+                </video>
+                <span class="video-card-copy">
+                  <span class="video-card-title">Demo 01</span>
+                  <span class="video-card-meta">Portrait clip</span>
+                  <span class="video-card-note">Long-horizon manipulation</span>
+                </span>
+              </button>
+
+              <button
+                class="video-card video-card-inline js-open-video"
+                type="button"
+                data-video-src="./assets/videos/excerpts/demo-02-excerpt.mp4"
+                data-video-title="Demo 02 / Excerpt preview"
+                style="--video-pos: 50% 22%;"
+              >
+                <video muted loop playsinline preload="metadata">
+                  <source src="./assets/videos/excerpts/demo-02-excerpt.mp4" type="video/mp4">
+                </video>
+                <span class="video-card-copy">
+                  <span class="video-card-title">Demo 02</span>
+                  <span class="video-card-meta">Excerpt preview</span>
+                  <span class="video-card-note">Browser-safe H.264 crop</span>
+                </span>
+              </button>
+
+              <button
+                class="video-card video-card-inline js-open-video"
+                type="button"
+                data-video-src="./assets/videos/demo-03.mp4"
+                data-video-title="Demo 03 / Compact showcase"
+                style="--video-pos: 50% 18%;"
+              >
+                <video muted loop playsinline preload="metadata">
+                  <source src="./assets/videos/demo-03.mp4" type="video/mp4">
+                </video>
+                <span class="video-card-copy">
+                  <span class="video-card-title">Demo 03</span>
+                  <span class="video-card-meta">Portrait clip</span>
+                  <span class="video-card-note">Compact visual summary</span>
+                </span>
+              </button>
+
+              <button
+                class="video-card video-card-inline js-open-video"
+                type="button"
+                data-video-src="./assets/videos/demo-04.mp4"
+                data-video-title="Demo 04 / Wide teaser"
+                style="--video-pos: 50% 50%;"
+              >
+                <video muted loop playsinline preload="metadata">
+                  <source src="./assets/videos/demo-04.mp4" type="video/mp4">
+                </video>
+                <span class="video-card-copy">
+                  <span class="video-card-title">Demo 04</span>
+                  <span class="video-card-meta">Landscape clip</span>
+                  <span class="video-card-note">Short high-impact opener</span>
+                </span>
+              </button>
+
+              <button
+                class="video-card video-card-inline js-open-video"
+                type="button"
+                data-video-src="./assets/videos/excerpts/demo-05-excerpt.mp4"
+                data-video-title="Demo 05 / Excerpt preview"
+                style="--video-pos: 50% 20%;"
+              >
+                <video muted loop playsinline preload="metadata">
+                  <source src="./assets/videos/excerpts/demo-05-excerpt.mp4" type="video/mp4">
+                </video>
+                <span class="video-card-copy">
+                  <span class="video-card-title">Demo 05</span>
+                  <span class="video-card-meta">Excerpt preview</span>
+                  <span class="video-card-note">Browser-safe H.264 crop</span>
+                </span>
+              </button>
+
+              <button
+                class="video-card video-card-inline js-open-video"
+                type="button"
+                data-video-src="./assets/videos/excerpts/demo-06-excerpt.mp4"
+                data-video-title="Demo 06 / Excerpt preview"
+                style="--video-pos: 50% 50%;"
+              >
+                <video muted loop playsinline preload="metadata">
+                  <source src="./assets/videos/excerpts/demo-06-excerpt.mp4" type="video/mp4">
+                </video>
+                <span class="video-card-copy">
+                  <span class="video-card-title">Demo 06</span>
+                  <span class="video-card-meta">Landscape excerpt</span>
+                  <span class="video-card-note">Fast browser-stable preview</span>
+                </span>
+              </button>
+            </div>
           </div>
 
           <div class="lang-panel" data-lang="en">
@@ -313,7 +302,109 @@
             <p>
               At the same time, the entire data pipeline is also crucial, including data cleaning, annotation, quality inspection, and review. All of our data inspection and labeling are completed through AutoLabeling, with human review needed only at the final stage. We also introduce PSI-World into the quality-inspection process and use the visualizability of the world model to score data quality. From the start of the pipeline design, we wanted human data to contribute not only high-level semantic information from images, but also all manipulation details, so we tried to make the 3D trajectories of human data as accurate as possible. Recovering hand motion from pure ego-video is usually only centimeter-level accurate, but with Lingchu's exoskeleton glove we can reduce that to sub-millimeter precision. For example, before data collection we use the glove to teleoperate the robot and adjust parameters so that the mapping is accurate. In the data pipeline, we also correct drifting or inaccurate poses again so that the final data used are all highly precise trajectories that can be replayed on the robot. For a more detailed analysis of the data, see Chapter 3. Finally, one pain point of WAM is slow inference. We spent a great deal of engineering effort on DiT caching, Torch Compile, quantization, and more, bringing single-pass inference from 2.2 seconds to below 100 ms and ensuring dexterity and smoothness during manipulation.
             </p>
-            <p class="insert-note">[Insert training-data retrieval figures, video-prediction comparisons, and related visuals]</p>
+            <div class="inline-visual-grid">
+              <button
+                class="video-card video-card-inline js-open-video"
+                type="button"
+                data-video-src="./assets/videos/demo-01.mp4"
+                data-video-title="Demo 01 / Long-form interaction"
+                style="--video-pos: 50% 18%;"
+              >
+                <video muted loop playsinline preload="metadata">
+                  <source src="./assets/videos/demo-01.mp4" type="video/mp4">
+                </video>
+                <span class="video-card-copy">
+                  <span class="video-card-title">Demo 01</span>
+                  <span class="video-card-meta">Portrait clip</span>
+                  <span class="video-card-note">Long-horizon manipulation</span>
+                </span>
+              </button>
+
+              <button
+                class="video-card video-card-inline js-open-video"
+                type="button"
+                data-video-src="./assets/videos/excerpts/demo-02-excerpt.mp4"
+                data-video-title="Demo 02 / Excerpt preview"
+                style="--video-pos: 50% 22%;"
+              >
+                <video muted loop playsinline preload="metadata">
+                  <source src="./assets/videos/excerpts/demo-02-excerpt.mp4" type="video/mp4">
+                </video>
+                <span class="video-card-copy">
+                  <span class="video-card-title">Demo 02</span>
+                  <span class="video-card-meta">Excerpt preview</span>
+                  <span class="video-card-note">Browser-safe H.264 crop</span>
+                </span>
+              </button>
+
+              <button
+                class="video-card video-card-inline js-open-video"
+                type="button"
+                data-video-src="./assets/videos/demo-03.mp4"
+                data-video-title="Demo 03 / Compact showcase"
+                style="--video-pos: 50% 18%;"
+              >
+                <video muted loop playsinline preload="metadata">
+                  <source src="./assets/videos/demo-03.mp4" type="video/mp4">
+                </video>
+                <span class="video-card-copy">
+                  <span class="video-card-title">Demo 03</span>
+                  <span class="video-card-meta">Portrait clip</span>
+                  <span class="video-card-note">Compact visual summary</span>
+                </span>
+              </button>
+
+              <button
+                class="video-card video-card-inline js-open-video"
+                type="button"
+                data-video-src="./assets/videos/demo-04.mp4"
+                data-video-title="Demo 04 / Wide teaser"
+                style="--video-pos: 50% 50%;"
+              >
+                <video muted loop playsinline preload="metadata">
+                  <source src="./assets/videos/demo-04.mp4" type="video/mp4">
+                </video>
+                <span class="video-card-copy">
+                  <span class="video-card-title">Demo 04</span>
+                  <span class="video-card-meta">Landscape clip</span>
+                  <span class="video-card-note">Short high-impact opener</span>
+                </span>
+              </button>
+
+              <button
+                class="video-card video-card-inline js-open-video"
+                type="button"
+                data-video-src="./assets/videos/excerpts/demo-05-excerpt.mp4"
+                data-video-title="Demo 05 / Excerpt preview"
+                style="--video-pos: 50% 20%;"
+              >
+                <video muted loop playsinline preload="metadata">
+                  <source src="./assets/videos/excerpts/demo-05-excerpt.mp4" type="video/mp4">
+                </video>
+                <span class="video-card-copy">
+                  <span class="video-card-title">Demo 05</span>
+                  <span class="video-card-meta">Excerpt preview</span>
+                  <span class="video-card-note">Browser-safe H.264 crop</span>
+                </span>
+              </button>
+
+              <button
+                class="video-card video-card-inline js-open-video"
+                type="button"
+                data-video-src="./assets/videos/excerpts/demo-06-excerpt.mp4"
+                data-video-title="Demo 06 / Excerpt preview"
+                style="--video-pos: 50% 50%;"
+              >
+                <video muted loop playsinline preload="metadata">
+                  <source src="./assets/videos/excerpts/demo-06-excerpt.mp4" type="video/mp4">
+                </video>
+                <span class="video-card-copy">
+                  <span class="video-card-title">Demo 06</span>
+                  <span class="video-card-meta">Landscape excerpt</span>
+                  <span class="video-card-note">Fast browser-stable preview</span>
+                </span>
+              </button>
+            </div>
           </div>
         </section>
 
@@ -446,7 +537,7 @@
         <section class="content-block" id="tactile" data-toc="Tactile">
           <div class="lang-panel is-active" data-lang="zh">
             <p class="kicker">Chapter 5</p>
-            <h2>5. What is tactile use for: a medium for cross-embodiment transfer</h2>
+            <h2>5. Tactile: A Medium for Cross-Embodiment Transfer</h2>
             <p>
               从直觉来看，触觉对于人类的操作无疑是非常重要的。但是为什么现在最先进的大脑模型上基本都没有怎么输入触觉模态呢，主要还是带触觉的真机数据太少了。现实中集成到真机上面的触觉传感器很多都比较不稳定，再加上各个传感器的格式都不太一样，因此触觉数据非常难scale up。但是对于人类数据来说，收集成本基本是机器人的1/10以下，并且相对而言设备比较便携，因此让我们有机会可以在人类数据的层面上scale up触觉，帮助我们模型的训练。
             </p>
@@ -478,18 +569,30 @@
         <section class="content-block" id="closing" data-toc="Closing">
           <div class="lang-panel is-active" data-lang="zh">
             <p class="kicker">Closing</p>
-            <h2>页面说明</h2>
+            <h2>Collaborate with Us</h2>
             <p>
-              这个网页版本已经将 PDF 的中文正文整体放入页面，同时提供了一个可切换的英文翻译层。视频部分保留了本地 demo 的研究博客展示方式，其中浏览器兼容性不稳定的几条先使用截取转码后的预览版本。
+              如果你对合作感兴趣，欢迎联系我们。我们尤其期待与正在将机器人部署到真实世界应用中、并希望在自主性方向展开合作、持续扩大数据采集规模的公司合作。
+            </p>
+            <p>
+              我们也正在招聘。如果你有兴趣加入我们，也欢迎联系。
+            </p>
+            <p>
+              如果你对我们的工作、合作机会或其他问题感兴趣，请发送邮件至 hiring@psirobot.ai。
             </p>
             <a class="back-to-top" href="#top">Back to top</a>
           </div>
 
           <div class="lang-panel" data-lang="en">
             <p class="kicker">Closing</p>
-            <h2>Page note</h2>
+            <h2>Collaborate with Us</h2>
             <p>
-              This web version now places the full Chinese body from the PDF directly into the page and adds a switchable English translation layer. The media section keeps the research-blog presentation style while using short transcoded excerpts for the few videos whose original browser compatibility was unstable.
+              If you are interested in collaborating, please reach out. We are particularly excited to work with companies scaling up data collection with robots deployed for real-world applications, who are looking to collaborate on autonomy.
+            </p>
+            <p>
+              We are also hiring! If you'd be interested in joining us please get in touch.
+            </p>
+            <p>
+              For researchers interested in our work, collaborations, or other queries, please write to research@physicalintelligence.company.
             </p>
             <a class="back-to-top" href="#top">Back to top</a>
           </div>
