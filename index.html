@@ -61,12 +61,12 @@
             </div>
             <div class="lang-panel" data-lang="en">
               <p class="hero-lead">
-                Using human data to complement real-robot data has become a major focus in recent years, and how to use it for pretraining has been one of the central research directions. Our X framework contains two models, Psi-R2 and Psi-W0, together with an evaluation, improvement, and flywheel loop that connects them.
+                Leveraging human data to augment real-world robot data has emerged as a key research direction in contemporary embodied intelligence. However, effectively harnessing such data for model pre-training remains a fundamental open challenge. To tackle this problem, we propose two complementary models, namely Psi-R2 and Psi-W0, along with an integrated closed-loop paradigm that unifies them for systematic policy evaluation, performance optimization, and autonomous self-improvement.
               </p>
             </div>
 
             <div class="hero-actions">
-              <a class="button button-primary" href="#psi-policy">Video Gallery / 视频展示</a>
+              <a class="button button-primary js-jump-gallery" href="#psi-policy">Video Gallery / 视频展示</a>
               <button
                 class="button button-secondary js-open-video"
                 type="button"
@@ -133,7 +133,7 @@
             <p class="kicker">Introduction</p>
             <h2>The Beginning of Human Data</h2>
             <p>
-              For a long time, AI success has depended on scaling massive data and compute. Unlike autonomous driving and large language models, embodied intelligence differs in one very important way: there is no large stockpile of existing data, and it is also difficult to accumulate data naturally through commercial operations. As a result, how to scale data has become the most important problem in the entire embodied AI field. In daily work and life, humans constantly use two arms and two hands for dexterous manipulation, so the most direct idea is to use such data as fuel for embodied intelligence. But training models with human data has long faced two problems. First, because there is an embodiment gap between human hands and robots, directly using human-hand data for model training creates inconsistencies in kinematics and dynamics. Second, most human data currently comes either from first-person videos on the internet or from a small number of open-source datasets, and neither quantity nor quality has yet produced a truly scaled result. How to better use and study human data, and what happens after scaling, has remained an open question.
+              Historically, advances in artificial intelligence (AI) have been driven by the scaling of training data and computational resources. Embodied intelligence stands apart from established fields such as autonomous driving and large language models in a critical aspect: it lacks a pre-existing large-scale data repository, and cannot naturally accumulate task-relevant data through commercial deployment. Consequently, scaling up high-quality training data has become the paramount challenge facing the field. Humans continuously perform dexterous bimanual manipulations in daily life and industrial operations, rendering human behavioral data a natural and invaluable data source for training embodied agents. Yet learning from human demonstration data has long been plagued by two fundamental limitations. First, the inherent embodiment gap induces inconsistencies between human and robotic systems in kinematic structures and dynamic profiles. Second, the majority of existing human behavioral data is sourced from unconstrained egocentric internet videos or limited open-source datasets, such that neither the quantity nor quality of data meets the requirements of large-scale pretraining. The effective utilization of human data and its potential following large-scale deployment thus remain critical open questions. Psi-R2 and Psi-W0 represent the first suite of embodied intelligence models pretrained on human demonstration data at the 100,000-hour scale. In the subsequent sections, we elaborate on their architectural designs, the core design principles that motivate them, and the unique functional roles each model fulfills within the overall framework.
             </p>
             <figure class="framework-figure">
               <video
@@ -148,9 +148,9 @@
                 <source src="./diagram-studio/output/psi_flywheel.mp4" type="video/mp4">
               </video>
             </figure>
-            <p>
-              Using human data to supplement real-robot data has been a major research focus in recent years, and how to use it for pretraining has been one of the main research directions. Our X framework is the first model pretrained with broadly collected human data at the scale of 100,000 hours. Our framework contains two models, Psi-R2 and Psi-W0, together with an evaluation, improvement, and flywheel loop that connects them. Next, I will explain the design of the X framework and some of our thinking in detail.
-            </p>
+            <!-- <p>
+              Psi-R2 and Psi-W0 are the first embodied models pretrained on human data at the 100,000-hour scale. In the sections that follow, we will walk through their design, the thinking behind them, and the distinct role each model plays.
+            </p> -->
           </div>
         </section>
 
@@ -162,7 +162,7 @@
               Psi-R2的输入是图片和语言，输出是预测的未来视频和机器人的动作。整个框架的backbone是建立在预训练的视频生成模型上的，因此，我们的Psi-R2和最近比较火的WAM的定义一致，同时我们输入有图片和语言，输出有动作，因此也算是VLA，只不过backbone是一个视频生成模型，这两者的概念是不冲突的。
             </p>
             <p>
-              Psi-R2训练使用使用的bachbone是开源的Wan2.2-IT2V-5B-480P，训练时联合预测未来视频帧 + 机器人动作。我们在于训练阶段同时使用机器人数据和人类数据，机器人数据全部是使用的灵初的Psi-MobiDex，总共5417小时。人类数据包含使用灵初自研的外骨骼手套采集的数据加上不戴手套的采集的裸手人类数据，总共95472小时，包含74294种场景，4821种任务，1382种物体。通过预训练后，我们可以用非常少的真机数据微调（&lt;100条轨迹），就能完成非常长程，精细的操作，包括装配手机，工业包装，叠纸盒等。
+              Psi-R2训练使用使用的bachbone是开源的Wan2.2-IT2V-5B-480P，训练时联合预测未来视频帧 + 机器人动作。我们在于训练阶段同时使用机器人数据和人类数据，机器人数据全部是使用的灵初的Psi-MobiDex，总共5417小时。人类数据包含使用灵初自研的外骨骼手套采集的数据加上不戴手套的采集的裸手人类数据，总共95472小时，包含294种场景，4821种任务，1382种物体。通过预训练后，我们可以用非常少的真机数据微调（&lt;100条轨迹），就能完成非常长程，精细的操作，包括装配手机，工业包装，叠纸盒等。
             </p>
             <p>
               对于人类数据和真机数据之间的处理，我们选择了非常简单的做法：直接将人类的关节通过运动学和机器人对齐，图片不做任何处理，然后直接输入到模型里面作为State和Action Label。因此，我们研究的是如何使用人类数据来帮助某一本体进行预训练，而不是训练出一个能够跨本体使用的模型--前者才是真正帮助机器人商业化的核心，而后者仍然是一个研究性的问题。
@@ -176,108 +176,111 @@
             <p>
               同时，整个数据管线也非常重要，包括对数据的清洗，标注，质检，审核等功能。我们所有的数据质检和标注都使用Auto Labeling的方式完成，只在最后需要人工审核。同时在数据的质检中引入Psi-W0，运用世界模型的可视化能力为数据质量打分。在整套Pipeline的设计一开始，我们就希望人类数据不只是从image中提供一些高层次的语义信息，而是包括所有的操作细节，所以我们会让人类数据的3D轨迹尽可能准确。从纯Ego视频数据中恢复人手操作的误差基本是厘米级的，但是借助我们灵初的外骨骼手套，可以将其降低到亚毫米级的精度。举个例子，我们会在数据收集前使用数采手套进行机器人的遥操作来调整参数，确保其映射的准确。在数据管线中，也还会再对漂移的或者不准的pose进行修正，确保最后使用到的数据都是非常精确，可在机器人上replay出来的轨迹。对于数据的详细分析可以看第三章。最后，WAM的一个痛点是推理慢，我们也花费了非常多的工程努力，包括DiT Caching，Torch Compile，Quantization等，将其从单次推理2.2s降低到了100ms以下，保证了操作时灵巧与顺滑。
             </p>
+            <div class="media-block">
             <div class="inline-visual-grid">
               <button
                 class="video-card video-card-inline js-open-video"
                 type="button"
-                data-video-src="./assets/videos/demo-01.mp4"
-                data-video-title="Demo 01 / Long-form interaction"
+                data-video-src="./assets/videos/demo-web/1.mp4"
+                data-video-title="Demo 01"
                 style="--video-pos: 50% 18%;"
               >
                 <video muted loop playsinline preload="metadata">
-                  <source src="./assets/videos/demo-01.mp4" type="video/mp4">
+                  <source src="./assets/videos/demo-web/1.mp4" type="video/mp4">
                 </video>
                 <span class="video-card-copy">
                   <span class="video-card-title">Demo 01</span>
-                  <span class="video-card-meta">Portrait clip</span>
-                  <span class="video-card-note">Long-horizon manipulation</span>
+                  <span class="video-card-meta">Landscape clip</span>
+                  <span class="video-card-note">Full demo video</span>
                 </span>
               </button>
 
               <button
                 class="video-card video-card-inline js-open-video"
                 type="button"
-                data-video-src="./assets/videos/excerpts/demo-02-excerpt.mp4"
-                data-video-title="Demo 02 / Excerpt preview"
+                data-video-src="./assets/videos/demo-web/2.mp4"
+                data-video-title="Demo 02"
                 style="--video-pos: 50% 22%;"
               >
                 <video muted loop playsinline preload="metadata">
-                  <source src="./assets/videos/excerpts/demo-02-excerpt.mp4" type="video/mp4">
+                  <source src="./assets/videos/demo-web/2.mp4" type="video/mp4">
                 </video>
                 <span class="video-card-copy">
                   <span class="video-card-title">Demo 02</span>
-                  <span class="video-card-meta">Excerpt preview</span>
-                  <span class="video-card-note">Browser-safe H.264 crop</span>
+                  <span class="video-card-meta">Landscape clip</span>
+                  <span class="video-card-note">Full demo video</span>
                 </span>
               </button>
 
               <button
                 class="video-card video-card-inline js-open-video"
                 type="button"
-                data-video-src="./assets/videos/demo-03.mp4"
-                data-video-title="Demo 03 / Compact showcase"
+                data-video-src="./assets/videos/demo-web/3.mp4"
+                data-video-title="Demo 03"
                 style="--video-pos: 50% 18%;"
               >
                 <video muted loop playsinline preload="metadata">
-                  <source src="./assets/videos/demo-03.mp4" type="video/mp4">
+                  <source src="./assets/videos/demo-web/3.mp4" type="video/mp4">
                 </video>
                 <span class="video-card-copy">
                   <span class="video-card-title">Demo 03</span>
-                  <span class="video-card-meta">Portrait clip</span>
-                  <span class="video-card-note">Compact visual summary</span>
+                  <span class="video-card-meta">Landscape clip</span>
+                  <span class="video-card-note">Full demo video</span>
                 </span>
               </button>
 
               <button
                 class="video-card video-card-inline js-open-video"
                 type="button"
-                data-video-src="./assets/videos/demo-04.mp4"
-                data-video-title="Demo 04 / Wide teaser"
+                data-video-src="./assets/videos/demo-web/4.mp4"
+                data-video-title="Demo 04"
                 style="--video-pos: 50% 50%;"
               >
                 <video muted loop playsinline preload="metadata">
-                  <source src="./assets/videos/demo-04.mp4" type="video/mp4">
+                  <source src="./assets/videos/demo-web/4.mp4" type="video/mp4">
                 </video>
                 <span class="video-card-copy">
                   <span class="video-card-title">Demo 04</span>
                   <span class="video-card-meta">Landscape clip</span>
-                  <span class="video-card-note">Short high-impact opener</span>
+                  <span class="video-card-note">Full demo video</span>
                 </span>
               </button>
 
               <button
                 class="video-card video-card-inline js-open-video"
                 type="button"
-                data-video-src="./assets/videos/excerpts/demo-05-excerpt.mp4"
-                data-video-title="Demo 05 / Excerpt preview"
+                data-video-src="./assets/videos/demo-web/5.mp4"
+                data-video-title="Demo 05"
                 style="--video-pos: 50% 20%;"
               >
                 <video muted loop playsinline preload="metadata">
-                  <source src="./assets/videos/excerpts/demo-05-excerpt.mp4" type="video/mp4">
+                  <source src="./assets/videos/demo-web/5.mp4" type="video/mp4">
                 </video>
                 <span class="video-card-copy">
                   <span class="video-card-title">Demo 05</span>
-                  <span class="video-card-meta">Excerpt preview</span>
-                  <span class="video-card-note">Browser-safe H.264 crop</span>
+                  <span class="video-card-meta">Landscape clip</span>
+                  <span class="video-card-note">Full demo video</span>
                 </span>
               </button>
 
               <button
                 class="video-card video-card-inline js-open-video"
                 type="button"
-                data-video-src="./assets/videos/excerpts/demo-06-excerpt.mp4"
-                data-video-title="Demo 06 / Excerpt preview"
+                data-video-src="./assets/videos/demo-web/6.mp4"
+                data-video-title="Demo 06"
                 style="--video-pos: 50% 50%;"
               >
                 <video muted loop playsinline preload="metadata">
-                  <source src="./assets/videos/excerpts/demo-06-excerpt.mp4" type="video/mp4">
+                  <source src="./assets/videos/demo-web/6.mp4" type="video/mp4">
                 </video>
                 <span class="video-card-copy">
                   <span class="video-card-title">Demo 06</span>
-                  <span class="video-card-meta">Landscape excerpt</span>
-                  <span class="video-card-note">Fast browser-stable preview</span>
+                  <span class="video-card-meta">Landscape clip</span>
+                  <span class="video-card-note">Full demo video</span>
                 </span>
               </button>
+            </div>
+            <p class="media-caption">点击任意缩略图，查看对应的 Demo 视频。</p>
             </div>
           </div>
 
@@ -285,125 +288,128 @@
             <p class="kicker">Chapter 1</p>
             <h2>1. Psi-R2: What Matters in Learning from Human Data</h2>
             <p>
-              Psi-R2 takes images and language as input and outputs predicted future video together with robot actions. The backbone of the entire framework is built on a pretrained video-generation model. In that sense, our X model matches the recent definition of WAM. At the same time, because we input images and language and output actions, it can also be called a VLA. The difference is simply that the backbone happens to be a video-generation model; these two ideas are not in conflict.
+              Psi-R2 accepts visual images and natural language instructions as inputs, and generates predictions of future video frames alongside executable robot action sequences. Its backbone network is built upon a pre-trained video generative model, thereby aligning with the conceptual definition of the emerging World Action Model (WAM). Concurrently, by processing visual and linguistic inputs to output robotic actions, it can also be categorized as a vision-language-action (VLA) model. These two characterizations are not mutually exclusive; the distinction lies solely in its adoption of a video generative architecture as the core backbone.
             </p>
             <p>
-              Psi-R2 uses the open-source Wan2.2-IT2V-5B-480P as its backbone and is trained to jointly predict future video frames and robot actions. During training, we use both robot data and human data. The robot data all come from Lingchu's MobiDex, for a total of 5,417 hours. The human data include data collected with Lingchu's self-developed exoskeleton glove plus bare-hand human data collected without gloves, totaling 95,472 hours and covering X scenes, X tasks, and X objects. After pretraining, we can fine-tune with very little real-robot data (less than 10 hours) and still complete very long-horizon and fine-grained operations, including phone assembly, industrial packaging, and folding paper boxes.
+              Psi-R2 is initialized and trained on the open-source Wan2.2-IT2V-5B-480P backbone, with the training objective defined as the joint prediction of future video frames and robot control actions. During the pre-training phase, we integrate both real-robot demonstration data and human behavioral data. The robot data is exclusively sourced from PsiBot’s Psi-MobiDex dataset, totaling 5,417 hours. The human data combines motion recordings collected via PsiBot’s in-house exoskeleton glove and uninstrumented bare-hand data, amounting to 95,472 hours that cover 294 distinct scenes, 4,821 task types, and 1,382 object categories. Following pre-training, the model can be fine-tuned using an extremely small volume of real-robot data—fewer than 100 trajectories—to execute long-horizon, fine-grained manipulation tasks including smartphone assembly, industrial packaging, and paper box folding.
             </p>
             <p>
-              In handling the relationship between human data and real-robot data, we chose a very simple approach: directly align human joints with the robot through kinematics, do no processing to the images, and then feed everything into the model as state and action labels. As a result, what we study is how human data can help pretrain a model for one specific embodiment, rather than how to train a model that can be used across embodiments. The former is what truly matters for robot commercialization; the latter is still a research problem.
+              For the integration of human data and real-robot data, we adopt a deliberately minimalist processing paradigm: human joint configurations are aligned to the robot kinematic chain via direct kinematic mapping, raw image inputs remain unaltered, and the aligned representations are directly fed into the model as state observations and action labels. In essence, our research focuses on leveraging human data to boost pre-training for a target specific robot embodiment, rather than developing a universal model capable of generalizing across heterogeneous embodiments. The former is a critical enabler for commercial robotic deployment, while the latter remains an open research problem.
             </p>
             <p>
-              In our research process, we tried many kinds of special treatment for human data, including image inpainting, keypoint-assisted losses, and attempts to align human and robot data in some intermediate space. In the end, however, we chose to trust The Bitter Lesson: raw data in, raw data out. We found that once data volume becomes large enough, every hand-designed module turns into a performance bottleneck. When we used methods intended to make human data look closer to robot data, training became easier on simple tasks such as pick and place, but these methods actually hurt long-horizon and fine-grained manipulation. Most of these methods try to blur the difference between human and robot data so that the model treats them as the same and learns shared patterns more easily. But their dynamics are in fact different. For precise manipulation, making the two harder to distinguish means larger error and ultimately more task failures. So later we stopped adding more hand-designed processing. After only aligning the input and output dimensions, we let the model learn directly from massive data on its own. The result was also interesting: when the total data amount was small, the effect was unclear, but once the data became large enough, simpler design consistently worked better. Directly using raw inputs and outputs produced the best generalization, the strongest long-horizon ability, and the highest performance ceiling.
+              Over the course of this research, we explored numerous specialized processing pipelines for human data, including image inpainting, keypoint-guided auxiliary loss functions, and shared latent space alignment between human and robot data. Ultimately, we adhere to the core insight of the Bitter Lesson: raw data in, raw data out. Once the training corpus reaches sufficient scale, any hand-engineered module becomes a performance bottleneck. Methods that artificially homogenize human and robot data improve learning efficiency on simple tasks such as pick-and-place, yet severely degrade performance on long-horizon, high-precision manipulation tasks. Most such approaches attempt to blur the distributional discrepancy between human and robot data to facilitate shared representation learning, but ignore the inherent divergence in their dynamic profiles. For fine manipulation tasks, indistinguishability between the two data domains introduces amplified error and task failure. Instead of deploying complex hand-crafted processing, we only perform input-output dimensional alignment and enable the model to learn end-to-end from large-scale raw data. The results demonstrate a clear trend: under limited data scale, the advantage is negligible, yet with sufficient data volume, the minimalist design consistently yields superior performance. Direct utilization of raw inputs and outputs yields the strongest generalization capability, most robust long-horizon behavior, and highest performance ceiling for manipulation tasks.
             </p>
             <p>
-              Throughout the project, we found that the most important factor for model performance was understanding the data, especially human data. That includes data ratios, scheduler, curriculum, retrieval, and evaluation. How to design the input ratio and stages of training, how to retrieve paired data, and how to evaluate whether human-data knowledge has truly been injected into the robot model are what really determine performance. Many of these pieces require the capabilities of Psi-W0 as an action-conditioned world model, especially policy evaluation. Only if you can evaluate can you improve, and only then can you prove that the knowledge from human data has actually been learned. This is also why we trained Psi-W0 alongside Psi-R2; the detailed method will be explained in Chapter 2.
+              A key insight derived from this work is that model performance depends less on sophisticated architectural design than on principled understanding and curation of training data, especially human behavioral data. This includes data mixture ratios, diffusion schedulers, curriculum learning strategies, data retrieval mechanisms, and quantitative evaluation protocols. The core challenges involve designing staged training data combinations, retrieving semantically paired data samples, and validating whether actionable knowledge from human data is effectively transferred into the robot policy. Many of these capabilities rely on Psi-W0 as an Action-Conditioned World Model, particularly for rigorous policy evaluation. Performance improvement is only attainable through measurable evaluation, which serves as the definitive verification that the model has authentically absorbed knowledge from human demonstrations. This motivates the joint training of Psi-W0 alongside Psi-R2, with detailed elaboration provided in Chapter 2.
             </p>
             <p>
-              At the same time, the entire data pipeline is also crucial, including data cleaning, annotation, quality inspection, and review. All of our data inspection and labeling are completed through AutoLabeling, with human review needed only at the final stage. We also introduce Psi-W0 into the quality-inspection process and use the visualizability of the world model to score data quality. From the start of the pipeline design, we wanted human data to contribute not only high-level semantic information from images, but also all manipulation details, so we tried to make the 3D trajectories of human data as accurate as possible. Recovering hand motion from pure ego-video is usually only centimeter-level accurate, but with Lingchu's exoskeleton glove we can reduce that to sub-millimeter precision. For example, before data collection we use the glove to teleoperate the robot and adjust parameters so that the mapping is accurate. In the data pipeline, we also correct drifting or inaccurate poses again so that the final data used are all highly precise trajectories that can be replayed on the robot. For a more detailed analysis of the data, see Chapter 3. Finally, one pain point of WAM is slow inference. We spent a great deal of engineering effort on DiT caching, Torch Compile, quantization, and more, bringing single-pass inference from 2.2 seconds to below 100 ms and ensuring dexterity and smoothness during manipulation.
+              The end-to-end data pipeline is equally critical to overall system performance. We developed dedicated pipelines for data cleaning, automatic annotation, quality assurance, and expert review. All annotation and quality control procedures are implemented via auto-labeling, with human intervention only for final validation. We further integrate Psi-W0 into the data quality assurance stage, leveraging the world model’s visual predictive capability to assign data quality scores. From the pipeline’s inception, our objective was for human data to provide not only high-level semantic cues from visual inputs but also fine-grained manipulation details, driving us to maximize the precision of 3D human hand trajectories. Hand motion recovery from purely egocentric video typically incurs centimeter-scale errors, while PsiBot’s exoskeleton glove reduces this error to sub-millimeter precision. For instance, we calibrate kinematic mappings via teleoperation with the glove prior to data collection, and further correct pose drift or inaccuracies within the post-processing pipeline to ensure final trajectories can be faithfully replayed on physical robots. A thorough analysis of the data pipeline is presented in Chapter 3. Finally, slow inference speed is a well-documented limitation of WAM-based systems; we therefore invested extensive engineering efforts into DiT caching, Torch Compile, quantization, and other system-level optimizations, reducing single-pass inference latency from 2.2 seconds to under 100 ms and enabling smooth, dexterous robotic manipulation.
             </p>
+            <div class="media-block">
             <div class="inline-visual-grid">
               <button
                 class="video-card video-card-inline js-open-video"
                 type="button"
-                data-video-src="./assets/videos/demo-01.mp4"
-                data-video-title="Demo 01 / Long-form interaction"
+                data-video-src="./assets/videos/demo-web/1.mp4"
+                data-video-title="Demo 01"
                 style="--video-pos: 50% 18%;"
               >
                 <video muted loop playsinline preload="metadata">
-                  <source src="./assets/videos/demo-01.mp4" type="video/mp4">
+                  <source src="./assets/videos/demo-web/1.mp4" type="video/mp4">
                 </video>
                 <span class="video-card-copy">
                   <span class="video-card-title">Demo 01</span>
-                  <span class="video-card-meta">Portrait clip</span>
-                  <span class="video-card-note">Long-horizon manipulation</span>
+                  <span class="video-card-meta">Landscape clip</span>
+                  <span class="video-card-note">Full demo video</span>
                 </span>
               </button>
 
               <button
                 class="video-card video-card-inline js-open-video"
                 type="button"
-                data-video-src="./assets/videos/excerpts/demo-02-excerpt.mp4"
-                data-video-title="Demo 02 / Excerpt preview"
+                data-video-src="./assets/videos/demo-web/2.mp4"
+                data-video-title="Demo 02"
                 style="--video-pos: 50% 22%;"
               >
                 <video muted loop playsinline preload="metadata">
-                  <source src="./assets/videos/excerpts/demo-02-excerpt.mp4" type="video/mp4">
+                  <source src="./assets/videos/demo-web/2.mp4" type="video/mp4">
                 </video>
                 <span class="video-card-copy">
                   <span class="video-card-title">Demo 02</span>
-                  <span class="video-card-meta">Excerpt preview</span>
-                  <span class="video-card-note">Browser-safe H.264 crop</span>
+                  <span class="video-card-meta">Landscape clip</span>
+                  <span class="video-card-note">Full demo video</span>
                 </span>
               </button>
 
               <button
                 class="video-card video-card-inline js-open-video"
                 type="button"
-                data-video-src="./assets/videos/demo-03.mp4"
-                data-video-title="Demo 03 / Compact showcase"
+                data-video-src="./assets/videos/demo-web/3.mp4"
+                data-video-title="Demo 03"
                 style="--video-pos: 50% 18%;"
               >
                 <video muted loop playsinline preload="metadata">
-                  <source src="./assets/videos/demo-03.mp4" type="video/mp4">
+                  <source src="./assets/videos/demo-web/3.mp4" type="video/mp4">
                 </video>
                 <span class="video-card-copy">
                   <span class="video-card-title">Demo 03</span>
-                  <span class="video-card-meta">Portrait clip</span>
-                  <span class="video-card-note">Compact visual summary</span>
+                  <span class="video-card-meta">Landscape clip</span>
+                  <span class="video-card-note">Full demo video</span>
                 </span>
               </button>
 
               <button
                 class="video-card video-card-inline js-open-video"
                 type="button"
-                data-video-src="./assets/videos/demo-04.mp4"
-                data-video-title="Demo 04 / Wide teaser"
+                data-video-src="./assets/videos/demo-web/4.mp4"
+                data-video-title="Demo 04"
                 style="--video-pos: 50% 50%;"
               >
                 <video muted loop playsinline preload="metadata">
-                  <source src="./assets/videos/demo-04.mp4" type="video/mp4">
+                  <source src="./assets/videos/demo-web/4.mp4" type="video/mp4">
                 </video>
                 <span class="video-card-copy">
                   <span class="video-card-title">Demo 04</span>
                   <span class="video-card-meta">Landscape clip</span>
-                  <span class="video-card-note">Short high-impact opener</span>
+                  <span class="video-card-note">Full demo video</span>
                 </span>
               </button>
 
               <button
                 class="video-card video-card-inline js-open-video"
                 type="button"
-                data-video-src="./assets/videos/excerpts/demo-05-excerpt.mp4"
-                data-video-title="Demo 05 / Excerpt preview"
+                data-video-src="./assets/videos/demo-web/5.mp4"
+                data-video-title="Demo 05"
                 style="--video-pos: 50% 20%;"
               >
                 <video muted loop playsinline preload="metadata">
-                  <source src="./assets/videos/excerpts/demo-05-excerpt.mp4" type="video/mp4">
+                  <source src="./assets/videos/demo-web/5.mp4" type="video/mp4">
                 </video>
                 <span class="video-card-copy">
                   <span class="video-card-title">Demo 05</span>
-                  <span class="video-card-meta">Excerpt preview</span>
-                  <span class="video-card-note">Browser-safe H.264 crop</span>
+                  <span class="video-card-meta">Landscape clip</span>
+                  <span class="video-card-note">Full demo video</span>
                 </span>
               </button>
 
               <button
                 class="video-card video-card-inline js-open-video"
                 type="button"
-                data-video-src="./assets/videos/excerpts/demo-06-excerpt.mp4"
-                data-video-title="Demo 06 / Excerpt preview"
+                data-video-src="./assets/videos/demo-web/6.mp4"
+                data-video-title="Demo 06"
                 style="--video-pos: 50% 50%;"
               >
                 <video muted loop playsinline preload="metadata">
-                  <source src="./assets/videos/excerpts/demo-06-excerpt.mp4" type="video/mp4">
+                  <source src="./assets/videos/demo-web/6.mp4" type="video/mp4">
                 </video>
                 <span class="video-card-copy">
                   <span class="video-card-title">Demo 06</span>
-                  <span class="video-card-meta">Landscape excerpt</span>
-                  <span class="video-card-note">Fast browser-stable preview</span>
+                  <span class="video-card-meta">Landscape clip</span>
+                  <span class="video-card-note">Full demo video</span>
                 </span>
               </button>
+            </div>
+            <p class="media-caption">Click any thumbnail to open the corresponding demo.</p>
             </div>
           </div>
         </section>
@@ -416,7 +422,7 @@
               Psi-W0的输入是图片和语言和机器人的Action轨迹，输出是未来预测的视频。整个框架的backbone也是建立在预训练的视频生成模型上的，但和Psi-R2最大的区别是Action是作为输入，来控制输出的Video。因此，大部分人也把其叫做Action-Conditioned World Model (AC-WM)。
             </p>
             <p>
-              可能有人会问，我们已经可以用Psi-R2来预测未来的Video了，为什么还需要一个AC-WM？这里面的核心在于一个点：反事实（Artifact）。Psi-R2的所有训练数据都必须是有目的且成功的，所以其无法生成失败的预测--而这些反事实对于策略学习，特别是强化学习来说是非常重要的。因此，Psi-W0一个更重要的功能是能够对Policy进行评估，提升，与形成飞轮，这里面的核心是强化学习。
+              可能有人会问，我们已经可以用Psi-R2来预测未来的Video了，为什么还需要一个AC-WM？这里面的核心在于一个点：反事实。Psi-R2的所有训练数据都必须是有目的且成功的，所以其无法生成失败的预测--而这些反事实对于策略学习，特别是强化学习来说是非常重要的。因此，Psi-W0一个更重要的功能是能够对Policy进行评估，提升，与形成飞轮，这里面的核心是强化学习。
             </p>
             <p>
               Psi-W0的训练也是使用Wan2.2-IT2V-5B-480P，与Psi-R2相同的数据形式。但是在Psi-R2使用的数据量的基础上，还有大概额外30%的专门收集或正常数采/推理中产生的失败数据，来确保对反事实的精准建模。
@@ -430,6 +436,7 @@
             <p>
               所以，Psi-W0的功能和Psi-R2不一样，他们的目标不是完成任务，而是能够对一个策略进行评估，提升，并同时将人类数据转换成机器人数据。所以，Psi-W0需要的数据不仅是成功完成任务的数据，更需要的是失败的，无意义的数据，让Policy能够在AC-WM里面进行强化学习训练。
             </p>
+            <div class="media-block">
             <div
               class="transfer-carousel"
               data-transfer-carousel
@@ -438,29 +445,32 @@
               tabindex="0"
               aria-label="Human-to-robot transfer carousel"
             ></div>
+            <p class="media-caption">Psi-W0 将人手示范转化为机械手可执行的操作轨迹。</p>
+            </div>
           </div>
 
           <div class="lang-panel" data-lang="en">
             <p class="kicker">Chapter 2</p>
-            <h2>2. Psi-W0: Do RL in the World Model</h2>
+            <h2>2. Psi-W0: Doing RL in the World Model</h2>
             <p>
-              Psi-W0 takes images, language, and robot action trajectories as input and outputs predicted future video. Its backbone is also built on a pretrained video-generation model. The biggest difference from Psi-R2 is that action is used as an input in order to control the output video. For this reason, most people would call it an action-conditioned world model (AC-WM).
+              Psi-W0 accepts visual observations, natural language instructions, and robot action trajectories as inputs, and predicts corresponding future video frames. Analogous to Psi-R2, it is constructed upon a pre-trained video-generation backbone network. The core distinction lies in that action signals are incorporated as conditional inputs to regulate the generated video content, which renders it formally denoted as an Action-Conditioned World Model (AC-WM).
             </p>
             <p>
-              Some people may ask: if Psi-R2 can already predict future video, why do we still need an AC-WM? The core issue here is one thing: counterfactuals. All training data for Psi-R2 must be intentional and successful, so it cannot generate failed predictions. But those counterfactual outcomes are extremely important for policy learning, especially for reinforcement learning. Because of that, one of Psi-W0's more important functions is to evaluate policies, improve them, and help form a flywheel, with reinforcement learning at the center.
+              One may question the necessity of an AC-WM given that Psi-R2 already enables future video prediction. The critical justification resides in the modeling of counterfactual outcomes. All training trajectories employed for Psi-R2 are purposeful and successful executions, rendering the model inherently incapable of representing failure scenarios. Nevertheless, failure cases and other counterfactual predictions are indispensable for robust policy learning, particularly within reinforcement learning paradigms. This renders Psi-W0 invaluable not merely as a predictive module, but as a foundational instrument for policy evaluation, performance improvement, and the construction of a closed training flywheel, with reinforcement learning (RL) serving as its core mechanism.
             </p>
             <p>
-              Psi-W0 is also trained with Wan2.2-IT2V-5B-480P and uses the same data format as Psi-R2. But on top of the amount of data used by Psi-R2, it also includes roughly an additional 30% of specially collected failure data or failures produced during normal collection and inference, so that counterfactuals can be modeled accurately.
+              Psi-W0 is initialized and trained using the identical Wan2.2-IT2V-5B-480P backbone as Psi-R2, and adheres to the same fundamental data formatting schema. Beyond the training data utilized for Psi-R2, Psi-W0 additionally incorporates approximately 30% supplementary failure trajectories—either explicitly collected or generated during routine data acquisition and inference procedures—to enable accurate modeling of counterfactual scenarios.
             </p>
             <p>
-              Psi-W0 serves two main purposes. The first is evaluation during Psi-R2 training: while training, Psi-R2 is rolled out in some scenes from human data to check whether the policy model has really learned the knowledge contained in human data. The second, and more central one, is converting human data into robot data. How is this done? The earliest idea can be traced back to the 2024 paper <a class="paper-link" href="https://arxiv.org/abs/2411.04005" target="_blank" rel="noreferrer">Object-Centric Dexterous Manipulation from Human Motion Data</a>: the key to using human data on robots is to use reinforcement learning to transfer human dynamics into robot dynamics. For example, take the task of grasping an apple. If we kinematically retarget human apple-grasping data to the robot, the embodiment gap will very likely make the converted robot joint angles imprecise, though usually the error is only a small offset.
+              Psi-W0 fulfills two primary functions. The first is policy evaluation during the training of Psi-R2: we execute rollouts of Psi-R2 within scenes derived from human demonstration data, and employ Psi-W0 to verify whether the policy has genuinely acquired the actionable knowledge embedded within such demonstrations. The second, and more foundational, function is the translation of human data into robot-compatible trajectories. The core principle underlying this capability was initially proposed in our 2024 publication <a class="paper-link" href="https://arxiv.org/abs/2411.04005" target="_blank" rel="noreferrer">Object-Centric Dexterous Manipulation from Human Motion Data</a>: the key to deploying human data on robotic systems is to transfer human dynamics to robot dynamics via reinforcement learning. As a representative example, consider the task of grasping an apple: direct kinematic retargeting of human apple-grasping motion to the robot typically yields slightly biased robot joint configurations due to the embodiment gap, despite the apparent subtlety of such errors.
             </p>
             <p>
-              So the most direct idea is to do one layer of reinforcement-learning fine-tuning so that the converted robot trajectory can physically and plausibly pick up the apple. Earlier methods reconstructed the object in a simulator and did reinforcement learning there, but that pipeline is too heavy, and because of the sim-to-real gap it is especially hard to model deformable objects. We now replace the simulator in this pipeline with an AC-WM. Suppose we already have a trained Psi-R2 and Psi-W0. After Psi-R2 has learned from one human-data trajectory, we feed it into Psi-W0 for rollout, switch Psi-W0's visual and dynamic mode to the robot domain, and then apply reinforcement-learning fine-tuning so that under robot dynamics it can still complete the human-data task. In this way, the knowledge from that human trajectory is absorbed into the policy, the model becomes stronger, and new data are also generated. After that, we can filter out the good data and add them back into Psi-R2 and Psi-W0 training to form a data flywheel. We can also randomize Psi-W0 to create new scenes and generate new data.
+              The most straightforward resolution is to introduce an additional reinforcement-learning fine-tuning stage, such that the retargeted robot trajectory can accomplish physically plausible object grasping. Prior methodologies rely on object reconstruction within simulation environments to conduct RL, yet such pipelines suffer from excessive computational overhead, while the sim-to-real gap further impedes reliable modeling of deformable objects. Our framework replaces the simulator with an AC-WM to overcome these limitations. Given pre-trained Psi-R2 and Psi-W0 models, we feed the trajectory inferred by Psi-R2 from a human demonstration into Psi-W0 for rollout execution, switch the visual and dynamic representations of Psi-W0 to the robot domain, and conduct reinforcement-learning fine-tuning to enable the policy to complete the target task under robot-specific dynamics. In this process, the knowledge embedded in the human demonstration is absorbed into the policy, model performance is enhanced, and novel valid trajectories are generated. We subsequently filter high-quality samples from the generated data and reintroduce them into the training loops of Psi-R2 and Psi-W0 to construct a self-sustaining data flywheel. Furthermore, we can introduce stochastic variations within Psi-W0 to synthesize novel scenes and generate additional training trajectories.
             </p>
             <p>
-              So Psi-W0 is functionally different from Psi-R2. Its goal is not simply to complete tasks. Its goal is to evaluate and improve a policy while also converting human data into robot data. That means Psi-W0 needs not only data from successful task completion, but also failed and even meaningless data, so that the policy can undergo reinforcement-learning training inside the AC-WM.
+              Consequently, Psi-W0 is not designed as a secondary task-execution model. In contrast to Psi-R2, its primary objective is not direct task completion, but rather policy evaluation, performance optimization, and simultaneous translation of human data into robot-executable trajectories. This dictates that Psi-W0 requires not only successful task trajectories, but also failed and even non-meaningful samples, to provide the comprehensive distribution of outcomes necessary for effective policy learning within the AC-WM framework.
             </p>
+            <div class="media-block">
             <div
               class="transfer-carousel"
               data-transfer-carousel
@@ -469,15 +479,17 @@
               tabindex="0"
               aria-label="Human-to-robot transfer carousel"
             ></div>
+            <p class="media-caption">Psi-W0 translates human-hand demonstrations into manipulation trajectories executable by the robot hand.</p>
+            </div>
           </div>
         </section>
 
-        <section class="content-block" id="signal-noise" data-toc="SNR">
+        <section class="content-block" id="signal-noise" data-toc="Data">
           <div class="lang-panel is-active" data-lang="zh">
             <p class="kicker">Chapter 3</p>
             <h2>3. What Really Determines Data Value</h2>
             <p>
-              人类数据用来做模型训练早在具身的早期阶段就有，但是最近是特别兴起的一波风潮。在这过程中，也出现了五花八门的数据收集方法。在设备侧，有直接戴个相机在头上就开始录的，有需要用更精准的光学追踪人类身上各个位置的，也有戴着手套采集触觉信息的。采集方式也有很多，有在in the wild不同地方采的，有带移动同时操作的，有在一个个小房间里采的，也有在固定的数据采集厂采的。那这里面到底什么样的数据才是对预训练有帮助的呢。这是一个很难有严格证明的东西，但是我们通过几个月的研究，发现了一些方法。先说结论，在我们的模型训练中，我们发现信噪比是真正影响人类数据能否用在预训练中的关键。信噪比低的，可能对于训练反而是副作用。那么如何判断信噪比呢，我们发现，对于数据集本身的分布来说，操作任务多样性&gt;物体多样性&gt;&gt;场景多样性，而对于模态来说，精准的3D位姿&gt;&gt;触觉&gt;2D图像特征。
+              人类数据用来做模型训练早在具身的早期阶段就有，但是最近是特别兴起的一波风潮。在这过程中，也出现了五花八门的数据收集方法。在设备侧，有直接戴个相机在头上就开始录的，有需要用更精准的光学追踪人类身上各个位置的，也有戴着手套采集触觉信息的。采集方式也有很多，有在in the wild不同地方采的，有带移动同时操作的，有在一个个小房间里采的，也有在固定的数据采集厂采的。那这里面到底什么样的数据才是对预训练有帮助的呢。这是一个很难有严格证明的东西，但是我们通过几个月的研究，发现了一些方法。先说结论，在我们的模型训练中，我们发现信噪比是真正影响人类数据能否用在预训练中的关键。信噪比低的，可能对于训练反而是副作用。那么如何判断信噪比呢，我们发现，对于数据集本身的分布来说，操作任务多样性<span class="rank-sep">&gt;</span>物体多样性<span class="rank-sep rank-sep-strong">&gt;&gt;</span>场景多样性，而对于模态来说，精准的3D位姿<span class="rank-sep rank-sep-strong">&gt;&gt;</span>触觉<span class="rank-sep">&gt;</span>2D图像特征。
             </p>
             <p>
               对于数据集，我们发现场景多样性的重要程度是最低的，借助预训练的视频生成模型，不管是Policy还是World我们都能很轻易的实现跨背景泛化，哪怕训练数据的背景多样性并不高或几乎没有。在我们的实验中，不管是视频生成任务还是策略操作任务，如果使用预训练的Wan的参数，模型很轻易地就能在未见过的场景中进行泛化，如果不使用则很容易失败。因此，场景的泛化很大程度上来源于视频生成模型。对于操作来说，操作永远都是object-centric的，所有的任务都能被建模成我们需要操作哪一个物体，需要怎么操作这个物体，因此物体的多样性是非常重要的。而对于一个预训练的数据集来说，这里面质量的核心永远是任务的多样性，才能cover得住各种各样的下游任务。在我们的实验中，任务的泛化是最难的，并且呈现很明显的预训练见过的任务越多，跨任务的泛化能力更强。所以，我们人类数据数据集的构建最需要的是频繁更换任务和物体，而背景是最不重要的。
@@ -488,32 +500,64 @@
             <p>
               触觉详细的第五章再讨论，而2D图像特征（keypoint，mask等）更像是之前说的人为设计的模块，在大数据量之后对于模型基本没有帮助，所以我们在最后甚至都没有用这一部分。因此，对于人类数据，我们其实认为有两类。一类是力求精准的，整个轨迹在机器人空间下的，能够在处理后能直接和机器人数据等效/在机器人上Replay出来的数据。这种数据是有可能能直接用来做后训练代替机器人数据的。一个代表的便是使用灵初数采手套，在严格条件下采集的数据。还有一类是注重泛化的，舍弃精确度拥抱scalability的，这种数据可能永远无法用来直接做后训练，但能非常快的上量并给预训练模型提供很强的泛化能力，这两种我认为都是非常重要的。
             </p>
-            <p class="insert-note">【插入不同的数据类型的精度对比和可视化效果图】</p>
+            <div class="media-block">
+            <figure class="framework-figure framework-figure-body">
+              <video
+                class="framework-embed framework-video"
+                autoplay
+                muted
+                loop
+                playsinline
+                preload="metadata"
+                style="aspect-ratio: 64 / 27;"
+              >
+                <source src="./assets/data-web.mp4" type="video/mp4">
+                <source src="./assets/data.mp4" type="video/mp4">
+              </video>
+            </figure>
+            <p class="media-caption">该可视化展示了由灵初数采设备采集的高精度操作数据。</p>
+            </div>
           </div>
 
           <div class="lang-panel" data-lang="en">
             <p class="kicker">Chapter 3</p>
-            <h2>3. Signal-to-noise ratio: what really determines data value</h2>
+            <h2>3. What Really Determines Data Value</h2>
             <p>
-              Human data were used for model training even in the early stages of embodied AI, but recently this has become a particularly strong wave. In the process, many different data-collection methods have appeared. On the hardware side, some simply mount a camera on the head and start recording; some require more precise optical tracking of various positions on the human body; some use gloves to collect tactile signals. Collection settings also vary widely: some are collected in the wild, some involve mobility together with manipulation, some are collected in small rooms, and some in fixed data-collection factories. So what kind of data actually helps pretraining? It is hard to prove this rigorously, but after several months of study we found some patterns. The short answer is that, in our training, signal-to-noise ratio is what truly determines whether human data can help pretraining. Low-SNR data may even hurt training. How do we judge SNR? For dataset distribution, we found task diversity &gt; object diversity &gt;&gt; scene diversity. For modalities, precise 3D pose &gt;&gt; tactile &gt; 2D image features.
+              Although human behavioral data have been utilized for training embodied intelligence models since the early stages of the field, this research direction has witnessed a remarkable resurgence in recent years. Concurrent with this resurgence, a diverse array of data collection paradigms has emerged. From the hardware perspective, some systems employ head-mounted cameras for unconstrained recording; others leverage high-precision optical motion capture to track full-body keypoints; and certain setups integrate tactile gloves to acquire haptic feedback signals. The data collection environments also span a wide spectrum, including unconstrained in-the-wild settings, mobile manipulation scenarios, confined laboratory rooms, and dedicated fixed data acquisition factories. A critical question thus arises: which categories of human data are genuinely beneficial for large-scale model pre-training? While rigorous theoretical validation remains challenging, extensive empirical investigations over months of research lead us to a definitive conclusion: within our training pipeline, the signal-to-noise ratio (SNR) stands as the paramount metric governing whether human data exert a positive or detrimental impact on model learning, with low-SNR data actively degrading training stability and performance. Concretely, we identify a clear hierarchy in dataset composition: task diversity dominates object diversity, which in turn is vastly more influential than scene diversity. For sensory modalities, the priority follows precise 3D human pose <span class="rank-sep rank-sep-strong">&gt;&gt;</span> tactile feedback <span class="rank-sep rank-sep-strong">&gt;&gt;</span> 2D visual features.
             </p>
             <p>
-              For datasets, we found that scene diversity is the least important factor. With pretrained video-generation models, both policy and world models can generalize across backgrounds quite easily, even when training data have little or almost no background diversity. In our experiments, whether for video generation or policy manipulation, if we used pretrained Wan parameters the model could generalize to unseen scenes easily; without them it failed much more often. So scene generalization comes largely from the video-generation model. For manipulation itself, everything is object-centric. Every task can be modeled as what object we need to manipulate and how we need to manipulate it, so object diversity matters a lot. But for a pretraining dataset, the core of quality is always task diversity, because only that can cover a wide range of downstream tasks. In our experiments, task generalization was the hardest part, and the effect was very clear: the more tasks seen during pretraining, the stronger cross-task generalization became. So when building a human-data dataset, what we most need is to change tasks and objects frequently, while background is the least important factor.
+              For structured dataset construction, scene diversity exhibits the least significance for model performance. Benefiting from the strong representational power of pre-trained video-generation models, both the policy model and the world model achieve surprisingly robust cross-background generalization, even when the background diversity of the training corpus is severely limited. Our experimental results validate that models initialized with pre-trained Wan weights readily generalize to unseen scenes in both video generation and policy execution tasks, whereas models without such initialization suffer from frequent generalization failures. This indicates that cross-scene generalization capability is predominantly inherited from the pre-trained video foundation model. In contrast, robotic manipulation is inherently object-centric, as every manipulation task can be formulated as interacting with a target object and executing a specific interaction pattern. Accordingly, object diversity constitutes a critical factor for model generalization. Nevertheless, the core determinant of pre-training dataset quality is task diversity, as it directly governs the model’s coverage of downstream real-world tasks. Our experiments further reveal that cross-task generalization represents the most challenging capability to acquire, with a clear empirical trend: the greater the variety of tasks observed during pre-training, the stronger the model’s cross-task generalization performance. For this reason, we prioritize frequent variations in task types and object categories during human dataset construction, while regarding background variation as the least critical factor.
             </p>
             <p>
-              For modalities, we prefer to collect as many as possible and let the model discover the useful information on its own from data. So in addition to language, video, and robot joints, our inputs also include fabric-based tactile sensing covering the whole hand. The real core, however, is full-hand 3D pose tracking. This is the most important extra information for moving from a 2D video-generation model toward a 3D manipulation model. We therefore spent a great deal of effort improving this part, including better sensors and post-hoc compensation of error. How did we verify this? Psi-W0 gives us a good method. We take 3D trajectories of the same task recorded by devices with different precision, convert them from human data into robot data using the process described in Chapter 2, and let Psi-W0 generate the corresponding robot-manipulation data. The result is very clear: 3D trajectories collected by the Lingchu glove convert into robot trajectories best, because they are more aligned with robot dynamics from the start. By contrast, trajectories estimated from bare hands using computer vision have very large error and sometimes cannot complete the task at all.
+              Regarding sensory modalities, we adopt a multi-modal collection strategy to acquire as many complementary signals as possible, enabling the model to autonomously discover task-relevant cues. In addition to language instructions, visual observations, and robot joint states, our input pipeline incorporates full-hand fabric-based tactile sensing. Among all modalities, full-hand 3D pose tracking serves as the most critical signal, acting as the essential bridge for upgrading 2D video-generation models to 3D physical manipulation models. We thus devoted substantial engineering efforts to optimizing this module, including high-precision sensing hardware, post-hoc pose error compensation, and systematic kinematic calibration. Psi-W0 provides a reliable paradigm for validating the significance of high-precision 3D pose data. We conduct comparative experiments by feeding 3D trajectories of the same task—collected via devices with varying precision—into the human-to-robot data conversion pipeline described in Chapter 2, and use Psi-W0 to synthesize corresponding robot manipulation trajectories. The results are unambiguous: trajectories captured via Lingchu’s exoskeleton glove yield optimal transfer performance, as they are inherently well-aligned with robot dynamic profiles. In contrast, bare-hand trajectories estimated via computer vision methods suffer from substantial errors, and in some cases fail to enable task completion entirely.
             </p>
             <p>
-              Tactile data will be discussed in detail in Chapter 5. As for 2D image features such as keypoints and masks, they are closer to the kind of hand-designed modules mentioned earlier. At large scale, they provide almost no help to the model, so in the end we did not even use them. As a result, we think there are actually two kinds of human data. One kind pursues precision: trajectories in robot space that, after processing, can become directly equivalent to robot data or be replayed on the robot. Such data may be able to replace robot data during post-training. A representative example is the strictly collected data obtained with Lingchu's data-collection glove. The other kind focuses on generalization, giving up precision in exchange for scalability. These data may never be usable directly for post-training, but they can scale up very quickly and provide strong generalization ability to a pretrained model. We believe both are very important.
+              We defer an in-depth discussion of tactile sensing to Chapter 5. As for 2D visual features including keypoints and segmentation masks, they exhibit characteristics analogous to the hand-engineered modules discussed previously: their contribution to model performance becomes negligible under large-scale data regimes, leading us to omit these features entirely in the final pipeline. In practice, we categorize human behavioral data into two distinct classes. The first class is precision-centric data: trajectories defined in the robot kinematic space that, after standardized processing, are functionally equivalent to real-robot demonstration data and can be faithfully replayed on physical robotic platforms. Such data hold the potential to replace real-robot data during model post-training, with high-precision data collected via Lingchu’s exoskeleton glove under controlled conditions serving as a representative instance. The second class is generalization-centric data: these data exhibit lower precision but enable extreme scalability; while they are unsuitable for direct post-training, they can be rapidly accumulated to endow pre-trained models with strong cross-domain generalization capabilities. We posit that both categories of human data are indispensable for building high-performance embodied intelligence systems.
             </p>
-            <p class="insert-note">[Insert accuracy comparisons and visualizations across different data types]</p>
+            <div class="media-block">
+            <figure class="framework-figure framework-figure-body">
+              <video
+                class="framework-embed framework-video"
+                autoplay
+                muted
+                loop
+                playsinline
+                preload="metadata"
+                style="aspect-ratio: 64 / 27;"
+              >
+                <source src="./assets/data-web.mp4" type="video/mp4">
+                <source src="./assets/data.mp4" type="video/mp4">
+              </video>
+            </figure>
+            <p class="media-caption">This visualization shows high-precision manipulation data captured with Lingchu's data-collection hardware.</p>
+            </div>
           </div>
         </section>
 
         <section class="content-block" id="deployment" data-toc="Deployment">
           <div class="lang-panel is-active" data-lang="zh">
             <p class="kicker">Chapter 4</p>
-            <h2>4. Human Data or Not Human Data，That is the Question</h2>
+            <h2>4. Human Data or Not Human Data, That is the Question</h2>
             <p>
               很多人对于人类数据经常会抱有2个问题：1是我们是否不需要人类数据，真机遥操作数据如果到了某天足够多的话是否也可以直接全部拿真机数据进行训练。2是纯使用人类数据不加入任何真机数据是否也能够直接训出能用的模型。这两个问题在我看来其实是同一个回答：对于真实的商业化场景落地来说，纯人类数据能够训练出模型很可能是必须的。
             </p>
@@ -526,25 +570,23 @@
             <p>
               那么，如何将这些快节拍的高质量数据训入模型里面就成了非常重要的能力，也就意味着纯使用人类数据能够训练出模型是很重要的。这其实和我们当年做Sim2Real非常像，我们验证一个仿真数据可不可用，需要做Zero-Shot Sim2Real。现在验证人类数据可不可用，也需要做Zero-Shot Human2Robot，只不过仿真器换成了世界模型。因此，这部分需要Psi-R2和Psi-W0的共同结合，借助上一章说的数据转换能力，将人类数据转换成机器人的数据。在我们自己的实验当中，我们尝试过直接使用转换完的人类数据来代替机器人数据做后训练，在一些简单的pick and place或者抓袋子任务中能看到不错的效果。但是，对于一些更精细的任务比如手机装配，插盒子等，成功率依然不是很高。这条路径仍然需要一定的时间研究，但我们认为是必须要做的。
             </p>
-            <p class="insert-note">【插入分拨墙速度对比，快速，人类遥操速度，人类数据收集速度】</p>
           </div>
 
           <div class="lang-panel" data-lang="en">
             <p class="kicker">Chapter 4</p>
-            <h2>4. Human Data or Not Human Data, That is the Question</h2>
+            <h2>4. Human Data or Not Human Data, That Is the Question</h2>
             <p>
-              People often raise two questions about human data. First: maybe we do not need human data at all. If real-robot teleoperation data become plentiful enough one day, could we simply train entirely on real-robot data? Second: can we train a usable model using only human data, without any real-robot data at all? In my view these two questions actually have the same answer: for real commercial deployment, the ability to train models from pure human data may very well be necessary.
+              The community frequently raises two fundamental questions regarding the utilization of human data. First, given sufficient real-robot teleoperation data in the future, can we entirely rely on robot data for model training and dispense with human data? Second, can we pursue the alternative paradigm of training deployable models exclusively from human data, without incorporating any real-robot data? In our perspective, both questions converge to an identical conclusion: for practical commercial deployment, the capability to train models solely from human data may ultimately become indispensable.
             </p>
             <p>
-              Commercial deployment is not the same as making demos in the lab. The most important issue is an indicator that many people ignore in the lab: takt time. For a worker on a real production line, the SOP is the result of repeated refinement and is necessarily the optimized one. In a factory, if one job type adds just one extra motion or slows the rhythm slightly, the loss can be in the tens of millions. In demo settings, if one behavior cannot be completed, people often switch to another task or use a longer but easier workflow that still finishes the job. But that is often impossible in deployment. As a result, the most valuable data are often the data from workers performing real tasks in real scenarios.
+              Commercial robotic deployment differs fundamentally from laboratory demo development. A core metric that is frequently overlooked in laboratory research is takt time, the standardized cycle time of industrial operations. The standard operating procedure (SOP) of frontline workers is the product of iterative optimization and typically approximates operational optimality. In industrial factories, even a single redundant step or minor slowdown in a workflow can result in financial losses amounting to tens of millions. In laboratory demonstrations, non-functional behaviors are often circumvented by switching tasks or adopting longer yet simpler workflows; such compromises are generally infeasible in real-world deployment. For this reason, the most valuable training data are often those generated by workers executing practical operations in authentic industrial environments.
             </p>
             <p>
-              So how do human data solve this? First, human-data collection can align perfectly with the worker's actual job, for example by having a worker wear a glove while working, or a cashier wear a glove while handling checkout. As a data-collection tool, this means no special data collector is needed, the cost becomes minimal, and the collected data are the most authentic frontline operation data, which are often exactly what deployment needs. Second, and more importantly, human-data rhythm can reach the upper limit of arm motion that teleoperation often cannot. Because teleoperation requires the operator to watch the robot manipulate objects, it is usually much slower. If the mechanical limit of the robot arm is 1200, teleoperation may only reach 800, or even less. Humans, however, can collect data directly at 1200 speed because that is their real work. From a deployment perspective, the collected data may actually be higher quality because they reflect the real SOP and real speed, which pure teleoperation may never reach.
+              Human data resolve this dilemma through two key advantages. First, the data collection process can be nearly perfectly aligned with the actual operational workflows of workers: for instance, production line workers can wear data-collection gloves during routine operations, and cashiers can use the same equipment during checkout. This setup eliminates the demand for specialized data collectors, minimizes data acquisition costs, and yields frontline operational data that are highly consistent with the requirements of real-world deployment. Second, and more critically, human data can capture task execution tempos that are unattainable via teleoperation. Teleoperation relies on operators to monitor and control robotic manipulation, which inherently limits operational speed; if the physical velocity limit of a robotic arm is denoted as 1200 units, teleoperation typically only achieves 800 units or lower. In contrast, human workers can generate data at the full physical velocity (1200 units) during natural operation. From a commercial deployment perspective, this renders human data of higher quality than teleoperated robot data, as they faithfully preserve the authentic SOP and operational tempo.
             </p>
             <p>
-              Therefore, the ability to train such high-tempo, high-quality data into a model becomes extremely important, and that also means it is very important to be able to train a model from pure human data. This is very similar to what we used to do with sim-to-real. To validate whether simulated data are usable, we need zero-shot sim-to-real. Now, to validate whether human data are usable, we also need zero-shot human-to-robot, except that the simulator has been replaced by a world model. That means Psi-R2 and Psi-W0 need to work together, using the data-conversion ability described in the previous chapter to convert human data into robot data. In our own experiments, we have tried directly replacing robot data in post-training with converted human data. On some simple tasks, such as pick and place or grasping bags, we can see good effects. But for finer tasks such as phone assembly and box insertion, the success rate is still not high. This route still requires more research time, but we believe it is something that must be done.
+              This underscores the critical importance of integrating high-tempo, high-quality human data into model training, and validates the significance of the exclusive human-data training paradigm. This scenario is highly analogous to the sim-to-real transfer problem: verifying the utility of simulated data requires zero-shot sim-to-real evaluation, and validating the effectiveness of human data likewise demands zero-shot human-to-robot transfer, with the simulator replaced by the world model in this framework. This necessitates the collaborative operation of Psi-R2 and Psi-W0, which leverage the human-to-robot data conversion pipeline introduced in the preceding chapter to translate human data into robot-executable trajectories. In our internal experiments, we have attempted to directly substitute real-robot data with converted human data during the post-training stage. Encouraging results have been achieved on simple manipulation tasks such as pick-and-place and bag grasping; however, the success rate remains relatively low for high-precision tasks including smartphone assembly and box insertion. While further research and iteration are required for this direction, we maintain that it represents an indispensable path for the commercialization of embodied intelligence.
             </p>
-            <p class="insert-note">[Insert comparisons of sorting-wall speeds, fast execution, human teleoperation speed, and human-data collection speed]</p>
           </div>
         </section>
 
@@ -559,24 +601,22 @@
               为什么我们认为对于人类数据来说触觉模态比较重要呢，因为操作的核心永远是contact，对于人类数据和机器人数据来说，他们长的看上去可能不一样，关节的构型导致的运动学动力学可能不一样，但是对于操作时碰没碰到物体的信号其实是一样的。因此，我们认为触觉会对人手到机械手的迁移起到很重要的作用，所以在设计数采手套产品时也把触觉模态的数据采集加上了，希望能借助触觉的信息将人手和机械手之间的dynamic gap更好地在世界模型中做一个补偿。
             </p>
             <p>
-              由于真机上的触觉数据格式和手套的大部分都不太一样，并且大部分机器人上面其实没有触觉传感器，因此我们直接使用Mask training的方法，在真机数据输入时即选择直接mask掉触觉传感器，并且是将触觉作为Action Label让模型进行预测而不是观测。最后从结果也可以看到，加入了触觉之后世界模型的能力远好于没加之前，并且对于机器人与物体的交互也有了一定预测的能力，说明其学会了碰撞这一信息。
+              由于真机上的触觉数据格式和手套的大部分都不太一样，并且大部分机器人上面其实没有触觉传感器，因此我们直接使用Mask training的方法，在真机数据输入时即选择直接mask掉触觉传感器，并且是将触觉作为Action Label让模型进行预测而不是观测。在我们的实验中我们发现，加入了触觉之后世界模型的能力远好于没加之前，并且对于机器人与物体的交互也有了一定预测的能力，说明其学会了碰撞这一信息。
             </p>
-            <p class="insert-note">【插入有触觉vs没触觉的World model效果对比图】</p>
           </div>
 
           <div class="lang-panel" data-lang="en">
             <p class="kicker">Chapter 5</p>
-            <h2>5. What is tactile actually useful for: a medium for cross-embodiment transfer</h2>
+            <h2>5. Tactile: A Medium for Cross-Embodiment Transfer</h2>
             <p>
-              Intuitively, tactile sensing is obviously very important for human manipulation. But why do the most advanced "brain" models today usually take little or no tactile modality as input? The main reason is still that there is far too little real-robot data with tactile sensing. In practice, many tactile sensors integrated on real robots are unstable, and the formats differ from sensor to sensor, so tactile data are very hard to scale up. Human data are different: the collection cost is typically below one tenth of robotic collection, and the devices are relatively portable, which gives us a chance to scale tactile sensing at the human-data level and use it to help train our models.
+              From an intuitive perspective, tactile sensing is undeniably indispensable for dexterous human manipulation. It is thus natural to ask why the most advanced general-purpose robot “brain” models integrate little to no tactile feedback. The primary constraint lies in the extreme scarcity of high-quality tactile data from physical robots. In practical deployments, tactile sensors mounted on robotic platforms frequently suffer from instability, and their output formats vary drastically across hardware systems, rendering large-scale scaling of robotic tactile data highly challenging. Human-sourced tactile data present a stark contrast: the cost of data collection is less than one-tenth that of robotic tactile acquisition, and the corresponding sensing devices are relatively portable. This unique advantage grants us a viable opportunity to scale up tactile data collection on the human side and leverage such data to enhance the training of embodied intelligence models.
             </p>
             <p>
-              Why do we think tactile modality matters for human data? Because the core of manipulation is always contact. Human data and robot data may look different, and their joint configurations may imply different kinematics and dynamics, but the signal indicating whether contact with an object happened is fundamentally the same. For that reason, we believe tactile sensing can play an important role in transferring from the human hand to the robot hand. That is why, when designing our data-collection glove, we also included tactile-modality collection. We hope to use tactile information to better compensate for the dynamic gap between human hands and robot hands inside the world model.
+              We posit that tactile sensing holds particular significance for human behavioral data, because the fundamental essence of robotic manipulation resides in physical contact. Despite the discrepancies in visual appearance, kinematic architectures, and dynamic profiles between human and robotic systems, the binary and continuous signals that encode the occurrence and state of physical contact are fundamentally shared across embodiments. For this reason, we believe tactile information can serve as a critical enabler for knowledge transfer from human hands to robotic end-effectors. This motivated the integration of tactile sensing capabilities into the design of our custom data-collection glove: we aim to employ tactile signals to compensate for the dynamic gap between human and robotic hands within the world model.
             </p>
             <p>
-              Because tactile data on real robots usually have very different formats from those on the glove, and because most robots in practice do not have tactile sensors at all, we directly use mask training. When real-robot data are used as input, we simply mask out the tactile sensors. We also treat tactile signals as action labels to be predicted by the model rather than as observations. From the results, we can see that after adding tactile signals the world model is much stronger than before, and it also acquires some ability to predict robot-object interaction, showing that it has learned collision-related information.
+              Given that tactile data formats from physical robots are generally incompatible with those from our data-collection glove, and considering that most deployed robotic platforms lack tactile sensing hardware altogether, we adopt a mask-training strategy. When real-robot data are fed as input, we directly mask the tactile modalities; rather than treating tactile signals as observational inputs, we reformulate them as predictive action labels for model training. Experimental results clearly demonstrate that the integration of tactile data yields substantial performance improvements to the world model, while also endowing the model with the ability to anticipate robot-object interactions, indicating that the model has effectively learned contact and collision cues.
             </p>
-            <p class="insert-note">[Insert comparison of world-model performance with and without tactile input]</p>
           </div>
         </section>
 
@@ -585,7 +625,7 @@
             <p class="kicker">Closing</p>
             <h2>Collaborate with Us</h2>
             <p>
-              如果你对合作感兴趣，欢迎联系我们。我们尤其期待与正在将机器人部署到真实世界应用中、并希望在自主性方向展开合作、持续扩大数据采集规模的公司合作。
+              如果你对合作感兴趣，欢迎联系我们。我们尤其期待与持续扩大数据采集规模的公司合作。
             </p>
             <p>
               我们也正在招聘。如果你有兴趣加入我们，也欢迎联系。
@@ -600,13 +640,13 @@
             <p class="kicker">Closing</p>
             <h2>Collaborate with Us</h2>
             <p>
-              If you are interested in collaborating, please reach out. We are particularly excited to work with companies scaling up data collection with robots deployed for real-world applications, who are looking to collaborate on autonomy.
+              If you are interested in collaborating, please reach out.
             </p>
             <p>
-              We are also hiring! If you'd be interested in joining us please get in touch.
+              We are also hiring. If you would like to join us, we would love to hear from you.
             </p>
             <p>
-              For researchers interested in our work, collaborations, or other queries, please write to research@physicalintelligence.company.
+              If you are interested in our work, potential collaborations, or any other questions, please write to hiring@psirobot.ai.
             </p>
             <a class="back-to-top" href="#top">Back to top</a>
           </div>

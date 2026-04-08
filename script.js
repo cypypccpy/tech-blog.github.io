@@ -6,6 +6,7 @@ const modalPlayer = document.getElementById("video-modal-player");
 const langButtons = Array.from(document.querySelectorAll(".js-lang-toggle"));
 const langPanels = Array.from(document.querySelectorAll(".lang-panel"));
 const transferCarousels = Array.from(document.querySelectorAll("[data-transfer-carousel]"));
+const galleryJumpButtons = Array.from(document.querySelectorAll(".js-jump-gallery"));
 
 let activeTransferCarousel = null;
 
@@ -67,6 +68,10 @@ function wireVideos() {
   const openButtons = Array.from(document.querySelectorAll(".js-open-video"));
 
   openButtons.forEach((button) => {
+    if (!button.getAttribute("aria-label")) {
+      button.setAttribute("aria-label", button.dataset.videoTitle || "Open demo video");
+    }
+
     button.addEventListener("click", () => {
       openVideo(button.dataset.videoSrc, button.dataset.videoTitle);
     });
@@ -80,6 +85,22 @@ function wireVideos() {
     if (event.key === "Escape" && modal.classList.contains("is-open")) {
       closeVideo();
     }
+  });
+}
+
+function wireGalleryJump() {
+  if (!galleryJumpButtons.length) return;
+
+  galleryJumpButtons.forEach((button) => {
+    button.addEventListener("click", (event) => {
+      const activePolicyPanel = document.querySelector("#psi-policy .lang-panel.is-active");
+      const gallery = activePolicyPanel?.querySelector(".inline-visual-grid");
+
+      if (!gallery) return;
+
+      event.preventDefault();
+      gallery.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
   });
 }
 
@@ -325,6 +346,7 @@ updateActiveToc();
 initTransferCarousels();
 wireVideos();
 wireLanguageToggle();
+wireGalleryJump();
 primeVideoCards();
 
 window.addEventListener("scroll", updateActiveToc, { passive: true });

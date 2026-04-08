@@ -356,6 +356,11 @@ code {
   box-shadow: var(--shadow);
 }
 
+.framework-figure-body {
+  box-sizing: border-box;
+  width: min(100%, 860px);
+}
+
 .framework-embed {
   display: block;
   width: 100%;
@@ -376,6 +381,49 @@ code {
   color: rgba(244, 240, 232, 0.72);
   line-height: 1.75;
   font-size: 0.95rem;
+}
+
+.media-block {
+  display: grid;
+  gap: 12px;
+  width: min(100%, 860px);
+  margin-top: 12px;
+}
+
+.media-block > .inline-visual-grid,
+.media-block > .transfer-carousel,
+.media-block > .framework-figure {
+  width: 100%;
+  max-width: none;
+  margin-top: 0;
+}
+
+.media-caption {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 20px;
+  color: rgba(244, 240, 232, 0.72);
+  line-height: 1.75;
+  font-size: 0.93rem;
+  text-align: center;
+  text-wrap: balance;
+}
+
+.rank-sep {
+  display: inline-block;
+  margin: 0 0.16em;
+  color: #f3b26c;
+  font-weight: 800;
+  font-size: 1.12em;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  transform: translateY(-0.02em);
+  text-shadow: 0 0 10px rgba(243, 178, 108, 0.22);
+}
+
+.rank-sep-strong {
+  font-size: 1.22em;
+  letter-spacing: 0.08em;
 }
 
 .video-card {
@@ -422,13 +470,13 @@ code {
   gap: 16px;
   width: 100%;
   max-width: 860px;
-  margin-top: 10px;
+  margin-top: 0;
 }
 
 .transfer-carousel {
   width: 100%;
   max-width: 860px;
-  margin-top: 12px;
+  margin-top: 0;
   padding: 14px;
   border: 1px solid rgba(255, 255, 255, 0.09);
   border-radius: calc(var(--radius-xl) + 2px);
@@ -566,6 +614,7 @@ code {
 }
 
 .video-card-inline .video-card-copy {
+  display: none;
   left: 12px;
   right: 12px;
   bottom: 12px;
@@ -710,6 +759,14 @@ code {
 
   .video-grid {
     grid-template-columns: 1fr;
+  }
+
+  .media-block {
+    gap: 10px;
+  }
+
+  .media-caption {
+    padding: 0 10px;
   }
 
   .framework-figure {
